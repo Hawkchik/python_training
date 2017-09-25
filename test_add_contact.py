@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.firefox.webdriver import WebDriver
-import time, unittest
+import unittest
 
 def is_alert_present(wd):
     try:
@@ -17,15 +17,30 @@ class test_add_contact(unittest.TestCase):
     def test_test_add_contact(self):
         success = True
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
-        wd.find_element_by_css_selector("body").click()
+        self.open_home_page(wd)
+        self.Login(wd)
+        self.open_contact_page(wd)
+        self.add_new_contact(wd)
+        self.create_contact(wd)
+        self.return_home_page(wd)
+        #logout
+        self.Logout(success, wd)
+
+    def Logout(self, success, wd):
+        wd.find_element_by_link_text("Logout").click()
+        self.assertTrue(success)
+
+    def return_home_page(self, wd):
+        # return to home page
+        wd.find_element_by_id("logo").click()
+
+    def create_contact(self, wd):
+        # create contact
+        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        wd.find_element_by_id("content").click()
+
+    def add_new_contact(self, wd):
+        # add new contact
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -90,12 +105,25 @@ class test_add_contact(unittest.TestCase):
         wd.find_element_by_name("notes").click()
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys("Last test")
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
-        wd.find_element_by_id("content").click()
-        wd.find_element_by_id("logo").click()
-        wd.find_element_by_link_text("Logout").click()
-        self.assertTrue(success)
-    
+
+    def open_contact_page(self, wd):
+        # open contact page
+        wd.find_element_by_css_selector("body").click()
+
+    def Login(self, wd):
+        # login
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
+
+    def open_home_page(self, wd):
+        # open home page
+        wd.get("http://localhost/addressbook/")
+
     def tearDown(self):
         self.wd.quit()
 
