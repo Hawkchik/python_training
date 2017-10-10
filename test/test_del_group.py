@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-import pytest
-
-from python_training.fixture.application import Application
-from python_training.model.group import Group
-
 def test_delete_first_group(app):
-        app.session.login(username="admin", password="secret")
-        app.group.delete_first_group()
-        app.session.logout()
+    app.session.login(username="admin", password="secret")
+    app.group.delete_first_group()
+    app.session.logout()
